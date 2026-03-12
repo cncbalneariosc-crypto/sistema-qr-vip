@@ -23,21 +23,21 @@
         }
         .flyer-img { width: 100%; display: block; }
         
-        /* 🎯 El código QR flotante (SUBIDO PARA ENCAJAR PERFECTO) */
+        /* 🎯 El código QR flotante (SUBIDO Y AMPLIADO PARA TAPAR EL ORIGINAL) */
         .qr-flotante {
             position: absolute;
             background: white;
-            padding: 3px;
-            width: 23%;     /* Tamaño del QR */
-            bottom: 5.5%;   /* LO SUBIMOS (antes 3.5%) */
-            right: 4.5%;    /* Posición derecha del QR */
+            padding: 4px;   /* Borde blanco un poquito más grueso para tapar mejor */
+            width: 24%;     /* Un pelín más ancho */
+            bottom: 7.5%;   /* LO SUBIMOS bastante para que no se vea el QR viejo por arriba */
+            right: 5%;      /* Centrado perfectamente en el cuadro derecho */
         }
 
         /* 🎯 Los textos que tapan la plantilla base */
         .texto-flotante {
             position: absolute;
             color: black;
-            background-color: #f0f0f0; /* Color gris clarito para fundirse con el ticket */
+            background-color: #f0f0f0; /* Color que se funde con tu ticket */
             font-family: Arial, sans-serif;
             font-weight: bold;
             font-size: 13px;
@@ -47,10 +47,10 @@
             box-sizing: border-box;
         }
 
-        /* Posiciones exactas para tapar las letras de ejemplo */
-        .pos-folio { bottom: 19.5%; left: 31%; width: 23%; }
-        .pos-nombre { bottom: 15.5%; left: 23%; width: 31%; }
-        .pos-cedula { bottom: 11.5%; left: 23%; width: 31%; }
+        /* Posiciones exactas (El folio ya no tapa la palabra "FOLIO") */
+        .pos-folio { bottom: 16.5%; left: 42%; width: 28%; }
+        .pos-nombre { bottom: 14.5%; left: 26%; width: 44%; }
+        .pos-cedula { bottom: 10.5%; left: 26%; width: 44%; }
     </style>
 </head>
 <body>
