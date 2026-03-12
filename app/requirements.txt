@@ -5,3 +5,6 @@ psycopg2-binary
 python-multipart
 qrcode
 jinja2
+git add .
+git commit -m "Agregando gunicorn para el despliegue"
+git push
