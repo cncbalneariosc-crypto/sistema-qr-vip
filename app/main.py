@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Form, Depends, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles  # <-- NUEVO: Para cargar imágenes
 from sqlalchemy.orm import Session
 import qrcode
 import base64
@@ -13,7 +14,9 @@ from app.models import Entrada
 
 app = FastAPI(title="Innova Dynamics - QR VIP")
 
-# Configuración de rutas
+# 👇 Permitimos que la carpeta static muestre tu flyer al mundo
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
 URL_BASE_SISTEMA = "https://sistema-qr-vip-1.onrender.com"
 templates = Jinja2Templates(directory="app/templates")
 
@@ -31,7 +34,8 @@ def generar_qr(request: Request, nombre: str = Form(...), db: Session = Depends(
         
         url_validacion = f"{URL_BASE_SISTEMA}/validar/{token}"
         
-        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        # Hacemos el QR sin bordes blancos gruesos para que se vea mejor en el flyer
+        qr = qrcode.QRCode(version=1, box_size=10, border=1)
         qr.add_data(url_validacion)
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
@@ -43,8 +47,7 @@ def generar_qr(request: Request, nombre: str = Form(...), db: Session = Depends(
         return templates.TemplateResponse("index.html", {
             "request": request,
             "qr_code": qr_base64,
-            "nombre": nombre,
-            "exito": True
+            "nombre": nombre
         })
     except Exception as e:
         print(f"Error: {e}")
