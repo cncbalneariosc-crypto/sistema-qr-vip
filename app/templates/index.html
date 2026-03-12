@@ -3,31 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket Generado</title>
+    <title>Innova Dynamics - Generador VIP</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #121212; color: white; padding-top: 40px; margin: 0; }
-        .ticket-container { background: #ffffff; color: #000000; padding: 30px; border-radius: 15px; display: inline-block; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 2px dashed #bdc3c7; position: relative; }
-        .ticket-container::before, .ticket-container::after { content: ''; position: absolute; top: 50%; width: 30px; height: 30px; background-color: #121212; border-radius: 50%; transform: translateY(-50%); }
-        .ticket-container::before { left: -15px; }
-        .ticket-container::after { right: -15px; }
-        img { width: 250px; height: 250px; margin: 15px 0; border: 1px solid #eee; border-radius: 10px; }
-        .btn { display: inline-block; margin-top: 40px; padding: 12px 30px; background-color: #333; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.3s; border: 1px solid #555; }
-        .btn:hover { background-color: #555; }
+        body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .card { background: #2d2d2d; padding: 30px; border-radius: 15px; display: inline-block; margin-top: 20px; border: 2px solid #3d3d3d; }
+        input { padding: 10px; border-radius: 5px; border: none; width: 200px; }
+        button { padding: 10px 20px; background: #2ecc71; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .qr-img { background: white; padding: 10px; border-radius: 10px; margin-top: 20px; }
     </style>
 </head>
 <body>
-    <h2 style="color: #00c853;">✅ ¡Entrada Lista para Enviar!</h2>
-    <p style="color: #aaa; margin-bottom: 30px;">Copia la imagen inferior y envíala al ganador.</p>
+    <h1>🎟️ Generador de Pases VIP</h1>
     
-    <div class="ticket-container">
-        <h2 style="margin: 0; font-size: 28px; color: #2c3e50;">🎟️ PASE VIP</h2>
-        <h3 style="margin: 5px 0 0 0; color: #e74c3c; font-size: 22px; text-transform: uppercase;">{{ nombre }}</h3>
-        
-        <img src="{{ imagen_qr }}" alt="Código QR">
-        
-        <p style="margin: 0; font-size: 14px; color: #7f8c8d; font-weight: bold;">PRESENTAR EN PUERTA</p>
+    <div class="card">
+        <form action="/generar" method="post">
+            <input type="text" name="nombre" placeholder="Nombre del invitado" required>
+            <button type="submit">Generar Ticket</button>
+        </form>
+
+        {% if qr_code %}
+        <div style="margin-top: 30px;">
+            <h3>¡Pase para {{ nombre }} listo!</h3>
+            <img class="qr-img" src="data:image/png;base64,{{ qr_code }}" width="200">
+            <p>Escanea para validar</p>
+        </div>
+        {% endif %}
     </div>
-    <br>
-    <a href="/" class="btn">⬅ Generar otra entrada</a>
 </body>
 </html>
