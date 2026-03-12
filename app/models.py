@@ -3,7 +3,7 @@ from sqlalchemy.sql import func
 from .database import Base
 
 class Entrada(Base):
-    __tablename__ = "entradas"
+    __tablename__ = "entrada"
     # Esto asegura que los datos VIP vivan separados de tus Pedidos 2.0
     __table_args__ = {"schema": "sistema_qr"} 
 
