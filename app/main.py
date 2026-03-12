@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, Form, Depends, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles  # <-- NUEVO: Para cargar imágenes
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 import qrcode
 import base64
@@ -13,8 +13,6 @@ from app.database import get_db
 from app.models import Entrada 
 
 app = FastAPI(title="Innova Dynamics - QR VIP")
-
-# 👇 Permitimos que la carpeta static muestre tu flyer al mundo
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 URL_BASE_SISTEMA = "https://sistema-qr-vip-1.onrender.com"
@@ -25,16 +23,25 @@ def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/generar", response_class=HTMLResponse)
-def generar_qr(request: Request, nombre: str = Form(...), db: Session = Depends(get_db)):
+def generar_qr(request: Request, nombre: str = Form(...), cedula: str = Form(...), db: Session = Depends(get_db)):
     try:
         token = str(uuid.uuid4())
-        nueva_entrada = Entrada(id=token, nombre_ganador=nombre, usada=False, fecha_creacion=datetime.now())
+        # Generamos un folio único, ejemplo: MS-A1B2C3
+        folio_generado = f"MS-{token[:6].upper()}" 
+
+        nueva_entrada = Entrada(
+            id=token, 
+            nombre_ganador=nombre, 
+            cedula=cedula,
+            folio=folio_generado,
+            usada=False, 
+            fecha_creacion=datetime.now()
+        )
         db.add(nueva_entrada)
         db.commit()
         
         url_validacion = f"{URL_BASE_SISTEMA}/validar/{token}"
         
-        # Hacemos el QR sin bordes blancos gruesos para que se vea mejor en el flyer
         qr = qrcode.QRCode(version=1, box_size=10, border=1)
         qr.add_data(url_validacion)
         qr.make(fit=True)
@@ -47,7 +54,9 @@ def generar_qr(request: Request, nombre: str = Form(...), db: Session = Depends(
         return templates.TemplateResponse("index.html", {
             "request": request,
             "qr_code": qr_base64,
-            "nombre": nombre
+            "nombre": nombre,
+            "cedula": cedula,
+            "folio": folio_generado
         })
     except Exception as e:
         print(f"Error: {e}")
@@ -64,6 +73,7 @@ def validar(request: Request, token: str, db: Session = Depends(get_db)):
         entrada.usada = True
         entrada.fecha_uso = datetime.now()
         db.commit()
-        res = {"msg": f"✅ ACCESO CONCEDIDO: {entrada.nombre_ganador}", "color": "#2ecc71"}
+        # Ahora al escanear, también muestra la cédula en la puerta
+        res = {"msg": f"✅ ACCESO CONCEDIDO: {entrada.nombre_ganador} (C.I: {entrada.cedula})", "color": "#2ecc71"}
     
     return templates.TemplateResponse("resultado.html", {"request": request, **res})

@@ -6,62 +6,77 @@
     <title>Innova Dynamics - Panel VIP</title>
     <style>
         body { background: #121212; color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; text-align: center; }
-        .container { width: 90%; max-width: 400px; }
+        .container { width: 90%; max-width: 450px; }
         h1 { color: #2ecc71; font-size: 24px; margin-bottom: 20px; }
         input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #252525; color: white; box-sizing: border-box; }
         button { width: 100%; padding: 12px; background: #2ecc71; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; margin-bottom: 20px;}
         .btn-regresar { display: block; margin-top: 20px; color: #bbb; text-decoration: none; font-size: 14px; }
         
-        /* MAGIA DEL FLYER */
+        /* Contenedor del Flyer */
         .flyer-wrapper {
-            position: relative; /* Clave para que el QR flote dentro de esta caja */
+            position: relative; 
             width: 100%;
             margin: 0 auto;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .flyer-img {
-            width: 100%;
-            display: block;
-        }
+        .flyer-img { width: 100%; display: block; }
+        
+        /* El código QR flotante */
         .qr-flotante {
             position: absolute;
             background: white;
-            padding: 5px;
-            border-radius: 10px;
-            
-            /* ⚠️ AQUÍ MUEVES EL CÓDIGO QR PARA QUE ENCAJE EN TU IMAGEN ⚠️ */
-            width: 30%;   /* Qué tan grande es el QR (Aumenta o disminuye) */
-            top: 55%;     /* Mueve el QR de arriba hacia abajo (Ej: 60% baja más) */
-            left: 35%;    /* Mueve el QR de izquierda a derecha (Ej: 40% va a la derecha) */
+            padding: 3px;
+            width: 23%;     /* Tamaño del QR */
+            bottom: 3.5%;   /* Altura del QR */
+            right: 4.5%;    /* Posición derecha del QR */
         }
+
+        /* Los textos que tapan la plantilla base */
+        .texto-flotante {
+            position: absolute;
+            color: black;
+            background-color: #ebebeb; /* Color de fondo igual al ticket */
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 13px;
+            text-align: left;
+            padding: 2px 5px;
+            white-space: nowrap;
+        }
+
+        /* Posición de los textos (Ajusta los porcentajes si quedan movidos) */
+        .pos-folio { bottom: 22.5%; left: 34%; }
+        .pos-nombre { bottom: 13.5%; left: 25%; width: 45%; }
+        .pos-cedula { bottom: 8.5%; left: 26%; width: 44%; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 Innova VIP</h1>
+        <h1>🚀 Panel MOTO Show</h1>
 
         {% if not qr_code %}
         <div style="background: #1e1e1e; padding: 20px; border-radius: 15px;">
             <p>Generar nuevo pase VIP:</p>
             <form action="/generar" method="post">
                 <input type="text" name="nombre" placeholder="Nombre del Invitado" required>
+                <input type="text" name="cedula" placeholder="Cédula o ID" required>
                 <button type="submit">GENERAR ACCESO</button>
             </form>
         </div>
         {% else %}
         
         <div class="flyer-wrapper">
-            <img src="/static/flyer.jpg" class="flyer-img" alt="Flyer VIP">
-            
+            <img src="/static/flyer_vip.jpg" class="flyer-img" alt="Flyer VIP">
             <img src="data:image/png;base64,{{ qr_code }}" class="qr-flotante" alt="QR">
+            
+            <div class="texto-flotante pos-folio">{{ folio }}</div>
+            <div class="texto-flotante pos-nombre">{{ nombre }}</div>
+            <div class="texto-flotante pos-cedula">{{ cedula }}</div>
         </div>
         
-        <p style="color: #2ecc71; font-weight: bold; margin-top: 20px;">¡Ticket para {{ nombre }} listo!</p>
-        <p style="color: gray; font-size: 14px;">Toma captura de pantalla y envíalo</p>
         <a href="/" class="btn-regresar">← Generar otro nuevo</a>
-        
         {% endif %}
     </div>
 </body>
