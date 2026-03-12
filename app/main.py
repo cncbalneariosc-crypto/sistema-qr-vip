@@ -19,7 +19,7 @@ app = FastAPI(title="Sistema Control VIP Cloud")
 templates = Jinja2Templates(directory="app/templates")
 
 # --- CAMBIAR ESTO AL SUBIR A RENDER ---
-URL_BASE_SISTEMA = "http://localhost:9999" 
+# URL_BASE_SISTEMA = "https://sistema-qr-vip-1.onrender.com" 
 # ---------------------------------------
 
 @app.get("/", response_class=HTMLResponse)
